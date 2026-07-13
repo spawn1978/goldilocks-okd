@@ -62,8 +62,16 @@ oc get vpa -n demo-java-rightsizing
 # Ver recomendaciones crudas de un VPA
 oc describe vpa java-rightsizing-test -n demo-java-rightsizing
 ```
+Instalacion de aplicacion JAVA
+
+oc apply -f  java-rightsizing-test/openshift/namespace.yaml
+oc apply -f  java-rightsizing-test/openshift/imagestream.yaml 
+oc apply -f  java-rightsizing-test/openshift/buildconfig.yaml 
+oc start-build java-rightsizing-test --from-dir=ava-rightsizing-test --follow -n demo-java-rightsizing
+
 
 Salida esperada del `describe vpa`:
+
 
 ```
 Recommendation:
