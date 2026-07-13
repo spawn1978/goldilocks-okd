@@ -34,6 +34,10 @@ helm repo add fairwinds-stable https://charts.fairwinds.com/stable
 helm repo list | grep fairwinds-stable
 helm install goldilocks --namespace goldilocks --set  installVPA=true fairwinds-stable/goldilocks
 
+# Patch deployment, elimina runUserAs
+oc patch deployment goldilocks-dashboard -n goldilocks -p '{"spec":{"template":{"spec":{"containers":[{"name":"goldilocks","securityContext":{"runAsUser":null}}]}}}}'
+oc patch deployment goldilocks-controller -n goldilocks -p '{"spec":{"template":{"spec":{"containers":[{"name":"goldilocks","securityContext":{"runAsUser":null}}]}}}}'
+
 #Agrego SA
 oc adm policy add-scc-to-user anyuid -z goldilocks-dashboard -n goldilocks
 
@@ -42,11 +46,6 @@ oc adm policy add-scc-to-user anyuid -z goldilocks-controller -n goldilocks
 
 oc apply -f clusterrole-goldilock-dashboard.yaml
 oc apply -f clusterrole-goldilock-controller.yaml
-
-# Patch deployment, elimina runUserAs
-  
-oc patch deployment goldilocks-dashboard -n goldilocks -p '{"spec":{"template":{"spec":{"containers":[{"name":"goldilocks","securityContext":{"runAsUser":null}}]}}}}'
-oc patch deployment goldilocks-controller -n goldilocks -p '{"spec":{"template":{"spec":{"containers":[{"name":"goldilocks","securityContext":{"runAsUser":null}}]}}}}'
 
 # Create route
 oc apply -f route-goldilocks.yaml
