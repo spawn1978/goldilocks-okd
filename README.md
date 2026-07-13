@@ -31,7 +31,7 @@ oc new-project goldilocks --display-name="goldilocks" --description="Goldilocks 
 
 helm repo list
 helm repo add fairwinds-stable https://charts.fairwinds.com/stable
-helm repo list
+helm repo list | grep fairwinds-stable
 helm install goldilocks --namespace goldilocks --set  installVPA=true fairwinds-stable/goldilocks
 
 #Agrego SA
