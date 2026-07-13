@@ -19,10 +19,36 @@ El siguiente flujo fue testeado sobre **OpenShift Local (CRC) v4.20** con usuari
 
 
 ```bash
+# Loguearse al cluster con un usuario con los permisos necesarios
+
 # Clonar el repositorio de comunitario de autoscaler
 cd /tmp & git clone https://github.com/kubernetes/autoscaler.git
 cd /tmp/autoscaler/vertical-pod-autoscaler/hack
 ./vpa-up.sh
+
+oc new-project goldilocks --display-name="goldilocks" --description="Goldilocks Project description"
+
+helm repo list
+helm repo add fairwinds-stable https://charts.fairwinds.com/stable
+helm repo list
+helm install goldilocks --namespace goldilocks --set  installVPA=true fairwinds-stable/goldilocks
+
+#Agrego SA
+oc adm policy add-scc-to-user anyuid -z goldilocks-dashboard -n goldilocks
+
+#Si falla, darle permisos
+oc adm policy add-scc-to-user anyuid -z goldilocks-controller -n goldilocks
+
+oc apply -f clusterrole-goldilock-dashboard.yaml
+oc apply -f clusterrole-goldilock-controller.yaml
+
+# Patch deployment, elimina runUserAs
+  
+oc patch deployment goldilocks-dashboard -n goldilocks -p '{"spec":{"template":{"spec":{"containers":[{"name":"goldilocks","securityContext":{"runAsUser":null}}]}}}}'
+oc patch deployment goldilocks-controller -n goldilocks -p '{"spec":{"template":{"spec":{"containers":[{"name":"goldilocks","securityContext":{"runAsUser":null}}]}}}}'
+
+# Create route
+oc apply -f route-goldilocks.yaml
 
 # Verificar que Goldilocks este corriendo
 oc get pods -n goldilocks
