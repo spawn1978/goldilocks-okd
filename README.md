@@ -1,17 +1,4 @@
 
-## Acceder al dashboard
-
-```bash
-# Obtener la URL de la route generada por el script
-oc get route goldilocks-dashboard -n goldilocks
-
-# O hacer port-forward si no se creo la route
-oc port-forward svc/goldilocks-dashboard 8080:80 -n goldilocks
-# Abrir http://localhost:8080
-```
-
----
-
 ## Prueba sobre OpenShift CRC 4.20
 
 El siguiente flujo fue testeado sobre **OpenShift Local (CRC) v4.20** con usuario `kubeadmin`.
@@ -61,15 +48,59 @@ oc get vpa -n demo-java-rightsizing
 
 # Ver recomendaciones crudas de un VPA
 oc describe vpa java-rightsizing-test -n demo-java-rightsizing
+
+## Instalacion de aplicacion JAVA
+
+# 1. Namespace (con label Goldilocks)
+  oc apply -f openshift-projects/java-rightsizing-test/openshift/namespace.yaml
+
+# 2. ImageStream + BuildConfig
+  oc apply -f openshift-projects/java-rightsizing-test/openshift/imagestream.yaml
+  oc apply -f openshift-projects/java-rightsizing-test/openshift/buildconfig.yaml                                                                                                                                                                            
+# 3. Build desde local
+  oc start-build java-rightsizing-test --from-dir=openshift-projects/java-rightsizing-test  --follow -n demo-java-rightsizing
+
+# 4. Resto de objetos
+  oc apply -f openshift-projects/java-rightsizing-test/openshift/deployment.yaml
+  oc apply -f openshift-projects/java-rightsizing-test/openshift/service.yaml
+  oc apply -f openshift-projects/java-rightsizing-test/openshift/route.yaml
+  oc apply -f openshift-projects/java-rightsizing-test/openshift/vpa.yaml
+
+## Instalacion de aplicacion PYTHON
+
+# 1. Namespace (con label Goldilocks)
+
+  oc apply -f  python-app/openshift/namespace.yaml
+# 2. ImageStream + BuildConfig
+  oc apply -f  python-app/openshift/imagestream.yaml 
+  oc apply -f  python-app/openshift/buildconfig.yaml
+# 3. Build desde local
+  oc start-build python-app --from-dir=python-app --follow -n demo-python
+
+# 4. Resto de objetos
+  oc apply -f python-app/openshift/deployment.yaml 
+  oc apply -f python-app/openshift/service.yaml   
+  oc apply -f python-app/openshift/route.yaml  
+  oc apply -f python-app/openshift/vpa.yaml
+
+## Instalacion de aplicacion NODEJS
+
+# 1. Namespace (con label Goldilocks)
+  oc apply -f  nodejs-app/openshift/namespacE.yaml
+
+# 2. ImageStream + BuildConfig
+  oc apply -f  nodejs-app/openshift/imagestream.yaml 
+  oc apply -f  nodejs-app/openshift/buildconfig.yaml
+# 3. Build desde local
+  oc start-build nodejs-app --from-dir=python-app --follow -n demo-nodejs
+
+# 4. Resto de objetos
+  oc apply -f nodejs-app/openshift/deployment.yaml 
+  oc apply -f nodejs-app/openshift/service.yaml   
+  oc apply -f nodejs-app/openshift/route.yaml  
+  oc apply -f nodejs-app/openshift/vpa.yaml 
+
 ```
-Instalacion de aplicacion JAVA
-
-oc apply -f  java-rightsizing-test/openshift/namespace.yaml
-oc apply -f  java-rightsizing-test/openshift/imagestream.yaml 
-oc apply -f  java-rightsizing-test/openshift/buildconfig.yaml 
-oc start-build java-rightsizing-test --from-dir=ava-rightsizing-test --follow -n demo-java-rightsizing
-
-
 Salida esperada del `describe vpa`:
 
 
