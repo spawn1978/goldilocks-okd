@@ -16,7 +16,14 @@ oc port-forward svc/goldilocks-dashboard 8080:80 -n goldilocks
 
 El siguiente flujo fue testeado sobre **OpenShift Local (CRC) v4.20** con usuario `kubeadmin`.
 
+
+
 ```bash
+# Clonar el repositorio de comunitario de autoscaler
+cd /tmp & git clone https://github.com/kubernetes/autoscaler.git
+cd /tmp/autoscaler/vertical-pod-autoscaler/hack
+./vpa-up.sh
+
 # Verificar que Goldilocks este corriendo
 oc get pods -n goldilocks
 
