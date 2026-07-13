@@ -74,6 +74,7 @@ oc describe vpa java-rightsizing-test -n demo-java-rightsizing
 # 2. ImageStream + BuildConfig
   oc apply -f  python-app/openshift/imagestream.yaml 
   oc apply -f  python-app/openshift/buildconfig.yaml
+
 # 3. Build desde local
   oc start-build python-app --from-dir=python-app --follow -n demo-python
 
@@ -91,6 +92,7 @@ oc describe vpa java-rightsizing-test -n demo-java-rightsizing
 # 2. ImageStream + BuildConfig
   oc apply -f  nodejs-app/openshift/imagestream.yaml 
   oc apply -f  nodejs-app/openshift/buildconfig.yaml
+
 # 3. Build desde local
   oc start-build nodejs-app --from-dir=python-app --follow -n demo-nodejs
 
