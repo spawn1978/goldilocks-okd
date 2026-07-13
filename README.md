@@ -38,6 +38,15 @@ helm install goldilocks --namespace goldilocks --set  installVPA=true fairwinds-
 oc patch deployment goldilocks-dashboard -n goldilocks -p '{"spec":{"template":{"spec":{"containers":[{"name":"goldilocks","securityContext":{"runAsUser":null}}]}}}}'
 oc patch deployment goldilocks-controller -n goldilocks -p '{"spec":{"template":{"spec":{"containers":[{"name":"goldilocks","securityContext":{"runAsUser":null}}]}}}}'
 
+# Create route
+oc apply -f route-goldilocks.yaml
+
+# Verificar que Goldilocks este corriendo
+oc get pods -n goldilocks
+
+# Acceder al dashboard (ver seccion anterior)
+oc get route goldilocks-dashboard -n goldilocks
+
 #Agrego SA
 oc adm policy add-scc-to-user anyuid -z goldilocks-dashboard -n goldilocks
 
@@ -47,20 +56,11 @@ oc adm policy add-scc-to-user anyuid -z goldilocks-controller -n goldilocks
 oc apply -f clusterrole-goldilock-dashboard.yaml
 oc apply -f clusterrole-goldilock-controller.yaml
 
-# Create route
-oc apply -f route-goldilocks.yaml
-
-# Verificar que Goldilocks este corriendo
-oc get pods -n goldilocks
-
 # Verificar que se crearon los VPAs en el namespace de prueba
 oc get vpa -n demo-java-rightsizing
 
 # Ver recomendaciones crudas de un VPA
 oc describe vpa java-rightsizing-test -n demo-java-rightsizing
-
-# Acceder al dashboard (ver seccion anterior)
-oc get route goldilocks-dashboard -n goldilocks
 ```
 
 Salida esperada del `describe vpa`:
