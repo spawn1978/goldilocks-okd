@@ -21,6 +21,7 @@ El siguiente flujo fue testeado sobre **OpenShift Local (CRC) v4.20** con usuari
 ```bash
 # Loguearse al cluster con un usuario con los permisos necesarios
 
+# Instalacion de CRD para Vertical Pod Autoscaler
 # Clonar el repositorio de comunitario de autoscaler
 cd /tmp & git clone https://github.com/kubernetes/autoscaler.git
 cd /tmp/autoscaler/vertical-pod-autoscaler/hack
